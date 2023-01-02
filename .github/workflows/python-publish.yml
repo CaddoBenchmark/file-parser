@@ -24,7 +24,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: bump version
-      run: sed -r 's/(.*)(version = \"0.)([0-9])(.)([0-9])(\")(.*)/echo "\1\2${{ github.run_number }}\4${{ github.run_attempt }}\6\7"/ge' pyproject.toml > pyproject.toml
+      run: sed -r 's/(.*)(version = \"0.)([0-9])(.)([0-9])(\")(.*)/echo "\1\2${{ github.run_number }}\4${{ github.run_attempt }}\6\7"/ge' pyproject.toml > pyproject.toml-new
+    - name: swap project.toml files
+      run: rm pyproject.toml && mv pyproject.toml-new pyproject.toml
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
