@@ -3,8 +3,8 @@ import pandas as pd
 
 
 class CaddoFile:
-    def __init__(self, folds: [Fold], data: pd.DataFrame, separator: str):
+    def __init__(self, folds: [Fold], data: pd.DataFrame, settings=None):
         self.folds = folds
         self.data = data
-        self.separator = separator
+        self.settings = settings
 
