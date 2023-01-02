@@ -1,12 +1,20 @@
 import os
 import zipfile
+import io
+
+from yaml import SafeLoader
 
 from models.caddo_file import CaddoFile
 import pandas as pd
 import yaml
 
 
+class Dumper(yaml.Dumper):
+    def increase_indent(self, flow=False, indentless=False):
+        return super(Dumper, self).increase_indent(flow, False)
+
 class CaddoFileParser:
+
     def create_file(self, caddo_file: CaddoFile, file_name):
         self.save_data(caddo_file)
         self.save_folds(caddo_file)
