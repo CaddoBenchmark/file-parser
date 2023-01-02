@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: bump version
+      run: sed -r 's/(.*)(version = \"0.)([0-9])(.)([0-9])(\")(.*)/echo "\1\2${{env.GITHUB_RUN_NUMBER}}\4${{env.GITHUB_RUN_ATTEMPT}}\6\7"/ge' pyproject.toml
     - uses: actions/checkout@v3
     - name: Set up Python
       uses: actions/setup-python@v3
