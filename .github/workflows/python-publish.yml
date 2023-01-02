@@ -22,9 +22,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: bump version
-      run: sed -r 's/(.*)(version = \"0.)([0-9])(.)([0-9])(\")(.*)/echo "\1\2${GITHUB_RUN_NUMBER}\4${GITHUB_RUN_ATTEMPT}\6\7"/ge' ${GITHUB_WORKSPACE}/pyproject.toml
     - uses: actions/checkout@v3
+    - name: bump version
+      run: sed -r 's/(.*)(version = \"0.)([0-9])(.)([0-9])(\")(.*)/echo "\1\2${{GITHUB_RUN_NUMBER}}\4${{GITHUB_RUN_ATTEMPT}}\6\7"/ge' ${GITHUB_WORKSPACE}/pyproject.toml
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
