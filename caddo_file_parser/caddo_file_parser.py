@@ -4,7 +4,7 @@ import io
 
 from yaml import SafeLoader
 
-from models.caddo_file import CaddoFile
+from caddo_file_parser.models.caddo_file import CaddoFile
 import pandas as pd
 import yaml
 

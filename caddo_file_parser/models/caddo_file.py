@@ -1,4 +1,4 @@
-from models.fold import Fold
+from caddo_file_parser.models.fold import Fold
 import pandas as pd
 
 
