@@ -15,16 +15,16 @@ class Dumper(yaml.Dumper):
 
 class CaddoFileParser:
 
-    def create_file(self, caddo_file: CaddoFile, file_name):
-        self.save_data(caddo_file)
+    def create_file(self, caddo_file: CaddoFile, file_name, separator="$"):
+        self.save_data(caddo_file, separator)
         self.save_folds(caddo_file)
         self.pack_to_caddo_file(caddo_file, file_name)
         self.remove_unused_file(caddo_file)
 
-    def save_data(self, caddo_file):
+    def save_data(self, caddo_file, separator):
         pd.DataFrame(caddo_file.data).to_csv(
             "data.csv",
-            sep=';',
+            sep=separator,
             index=False
         )
 
