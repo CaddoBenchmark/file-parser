@@ -8,6 +8,8 @@ from caddo_file_parser.models.caddo_file import CaddoFile
 import pandas as pd
 import yaml
 
+from caddo_file_parser.models.fold import Fold
+
 
 class Dumper(yaml.Dumper):
     def increase_indent(self, flow=False, indentless=False):
@@ -24,7 +26,7 @@ class CaddoFileParser:
     def save_data(self, caddo_file):
         pd.DataFrame(caddo_file.data).to_csv(
             "data.csv",
-            sep=';',
+            sep="$",
             index=False
         )
 
