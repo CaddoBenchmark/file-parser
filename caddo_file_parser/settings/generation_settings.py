@@ -1,4 +1,4 @@
-class Settings:
+class GenerationSettings:
     data_source_path = ''
     data_source_separator = ''
     data_source_x_cols = []
