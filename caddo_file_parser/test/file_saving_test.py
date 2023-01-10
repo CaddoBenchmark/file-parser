@@ -6,7 +6,7 @@ from yaml import SafeLoader
 
 from caddo_file_parser.caddo_file_parser import CaddoFileParser
 from caddo_file_parser.models.caddo_file import CaddoFile
-from caddo_file_parser.models.fold import Fold
+from caddo_file_parser.models.index_set import IndexSet
 from caddo_file_parser.settings.generation_settings import GenerationSettings
 from caddo_file_parser.settings.generation_settings_loader import GenerationSettingsLoader
 
@@ -22,9 +22,9 @@ class FileSavingTest(unittest.TestCase):
         with open("settings.yaml", 'r') as file:
             settings = settings_loader.load_settings_object(yaml.load(file, Loader=SafeLoader))
             caddo_file = CaddoFile(
-                folds=[
-                    Fold(1, [1, 2, 3], [4, 5, 6], 10),
-                    Fold(2, [7, 8, 9], [10, 11, 12], 12)
+                index_sets=[
+                    IndexSet(1, [1, 2, 3], [4, 5, 6], 10),
+                    IndexSet(2, [7, 8, 9], [10, 11, 12], 12)
                 ],
                 data=DataFrame(
                     data=[[1, 2], [3, 4], [5, 6]],
