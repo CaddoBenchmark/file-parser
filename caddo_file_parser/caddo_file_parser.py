@@ -87,18 +87,12 @@ class CaddoFileParser:
         return pd.read_csv(io.StringIO(data_csv), sep=separator)
 
     def read_runs(self, zf, generation_settings):
-        # index_sets = []
-        # runs = generation_settings.data_splitting_folding_runs
-        # for i in range(runs):
-        #     file = zf.read(f"index_set_{i}.yaml").decode(encoding="utf-8")
-        #     data: IndexSet = yaml.load(file, Loader=SafeLoader)
-        #     index_sets.append(data)
         runs = []
-        total_runs_number = generation_settings.data_splitting_folding_runs
-        total_folds_in_run = generation_settings.data_splitting_folding_number
+        total_runs_number = generation_settings.data_splitting_runs
+        total_index_sets_in_run = self._get_total_index_sets_in_run(generation_settings)
         for run_number in range(total_runs_number):
             index_sets = []
-            for fold_number in range(total_folds_in_run):
+            for fold_number in range(total_index_sets_in_run):
                 index_set_file = zf.read(f"index_set_{fold_number}_run_{run_number}.yaml").decode(encoding="utf-8")
                 index_set = yaml.load(index_set_file, Loader=SafeLoader)
                 index_sets.append(index_set)
@@ -110,3 +104,9 @@ class CaddoFileParser:
                 )
             )
         return runs
+
+    def _get_total_index_sets_in_run(self, generation_settings):
+        if generation_settings.data_splitting_folding_method is not None:
+            return generation_settings.data_splitting_folding_number
+        else:
+            raise AttributeError("There is no splitting method set")

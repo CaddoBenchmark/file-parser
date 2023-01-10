@@ -3,7 +3,7 @@ class GenerationSettings:
     data_input_separator = ''
     data_extraction_function_path = ''
     data_splitting_folding_number = 0
-    data_splitting_folding_runs = 0
+    data_splitting_runs = 0
     data_output_file_name = ''
     data_splitting_folding_method = ''
     data_splitting_folding_seeds_from_list = []
