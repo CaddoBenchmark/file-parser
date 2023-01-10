@@ -27,23 +27,23 @@ class FileSavingTest(unittest.TestCase):
                     Run(
                         number=1,
                         index_sets=[
-                            IndexSet(1, [1, 2, 3], [4, 5, 6], 10),
-                            IndexSet(2, [7, 8, 9], [10, 11, 12], 10)
+                            IndexSet(1, [1, 2, 0], [2, 0, 1], 10),
+                            IndexSet(0, [2, 2, 2], [2, 0, 0], 10)
                         ],
-                        seed=2134214214
+                        seed=10
                     ),
                     Run(
-                        number=2,
+                        number=0,
                         index_sets=[
-                            IndexSet(1, [13, 14, 15], [16, 17, 18], 11),
-                            IndexSet(2, [19, 20, 21], [22, 23, 24], 11)
+                            IndexSet(1, [1, 1, 2], [1, 2, 1], 11),
+                            IndexSet(0, [0, 1, 2], [1, 0, 0], 11)
                         ],
-                        seed=986876876
+                        seed=11
                     ),
                 ],
                 data=DataFrame(
-                    data=[[1, 2], [3, 4], [5, 6]],
-                    columns=["col_A", "col_B"]
+                    data=[[0, 1, 2], [1, 3, 4], [2, 5, 6]],
+                    columns=["idx", "x__col_A", "y__col_B"]
                 ),
                 settings=settings
             )
