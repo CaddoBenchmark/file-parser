@@ -1,4 +1,4 @@
-class Fold:
+class IndexSet:
     def __init__(self, number: int, train_indexes: [int], test_indexes: [int], seed: int):
         self.number = number
         self.train_indexes = train_indexes
