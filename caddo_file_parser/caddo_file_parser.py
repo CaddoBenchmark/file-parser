@@ -9,6 +9,7 @@ import pandas as pd
 import yaml
 
 from caddo_file_parser.models.index_set import IndexSet
+from caddo_file_parser.models.run import Run
 from caddo_file_parser.settings.generation_settings_loader import GenerationSettingsLoader
 
 
@@ -21,7 +22,7 @@ class CaddoFileParser:
 
     def create_file(self, caddo_file: CaddoFile):
         self.save_data(caddo_file)
-        self.save_index_sets(caddo_file)
+        self.save_runs(caddo_file)
         self.pack_to_caddo_file(caddo_file)
         self.remove_unused_file(caddo_file)
 
@@ -32,8 +33,12 @@ class CaddoFileParser:
             index=False
         )
 
-    def save_index_sets(self, caddo_file):
-        for index_set in caddo_file.index_sets:
+    def save_runs(self, caddo_file):
+        for run in caddo_file.runs:
+            self.save_index_sets(run)
+
+    def save_index_sets(self, run):
+        for index_set in run.index_sets:
             index_set_number = index_set.number
             train_indexes = index_set.train_indexes
             test_indexes = index_set.test_indexes
@@ -44,27 +49,31 @@ class CaddoFileParser:
                 "test_indexes": test_indexes,
                 "seed": seed
             }
-            with open(f"index_set_{index_set_number}.yaml", 'w') as file:
+            with open(f"index_set_{index_set_number}_run_{run.number}.yaml", 'w') as file:
                 yaml.dump(file_content, file, Dumper=Dumper, default_flow_style=False)
 
     def pack_to_caddo_file(self, caddo_file):
-        filenames = [f"index_set_{index_set.number}.yaml" for index_set in caddo_file.index_sets] + ["data.csv"] + ["settings.yaml"]
+        filenames = []
+        for run in caddo_file.runs:
+            filenames += [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in caddo_file.runs]
+        filenames += ["data.csv"] + ["settings.yaml"]
         with zipfile.ZipFile(f"{caddo_file.settings.data_output_file_name}.caddo", "w") as archive:
             for filename in filenames:
                 archive.write(filename)
 
     def remove_unused_file(self, caddo_file):
-        filenames = [f"index_set_{index_set.number}.yaml" for index_set in caddo_file.index_sets] + ["data.csv"]
-        for file in filenames:
-            os.remove(file)
+        for run in caddo_file.runs:
+            filenames = [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in caddo_file.runs]
+            for file in filenames:
+                os.remove(file)
+        os.remove("data.csv")
 
     def read_data(self, file_name) -> CaddoFile:
-
         with zipfile.ZipFile(file_name + ".caddo", "r") as zf:
             generation_settings = self.read_settings(zf)
             data = self.read_csv_data(zf, generation_settings)
-            index_sets = self.read_index_sets(zf, generation_settings)
-        caddo_file: CaddoFile = CaddoFile(index_sets, data, generation_settings)
+            runs = self.read_runs(zf, generation_settings)
+        caddo_file: CaddoFile = CaddoFile(runs, data, generation_settings)
         return caddo_file
 
     def read_settings(self, zf):
@@ -77,11 +86,27 @@ class CaddoFileParser:
         data_csv = zf.read("data.csv").decode(encoding="utf-8")
         return pd.read_csv(io.StringIO(data_csv), sep=separator)
 
-    def read_index_sets(self, zf, generation_settings):
-        index_sets = []
-        runs = generation_settings.data_splitting_folding_runs
-        for i in range(runs):
-            file = zf.read(f"index_set_{i}.yaml").decode(encoding="utf-8")
-            data: IndexSet = yaml.load(file, Loader=SafeLoader)
-            index_sets.append(data)
-        return index_sets
+    def read_runs(self, zf, generation_settings):
+        # index_sets = []
+        # runs = generation_settings.data_splitting_folding_runs
+        # for i in range(runs):
+        #     file = zf.read(f"index_set_{i}.yaml").decode(encoding="utf-8")
+        #     data: IndexSet = yaml.load(file, Loader=SafeLoader)
+        #     index_sets.append(data)
+        runs = []
+        total_runs_number = generation_settings.data_splitting_folding_runs
+        total_folds_in_run = generation_settings.data_splitting_folding_number
+        for run_number in range(total_runs_number):
+            index_sets = []
+            for fold_number in range(total_folds_in_run):
+                index_set_file = zf.read(f"index_set_{fold_number}_run_{run_number}.yaml").decode(encoding="utf-8")
+                index_set = yaml.load(index_set_file, Loader=SafeLoader)
+                index_sets.append(index_set)
+            runs.append(
+                Run(
+                    seed=index_sets[0].seed,
+                    number=run_number,
+                    index_sets=index_sets
+                )
+            )
+        return runs
