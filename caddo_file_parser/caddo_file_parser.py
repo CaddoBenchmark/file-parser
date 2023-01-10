@@ -11,6 +11,7 @@ import yaml
 from caddo_file_parser.models.index_set import IndexSet
 from caddo_file_parser.models.run import Run
 from caddo_file_parser.settings.generation_settings_loader import GenerationSettingsLoader
+from caddo_file_parser.validation.caddo_file_validator import CaddoFileValidator
 
 
 class Dumper(yaml.Dumper):
@@ -21,6 +22,7 @@ class Dumper(yaml.Dumper):
 class CaddoFileParser:
 
     def create_file(self, caddo_file: CaddoFile):
+        CaddoFileValidator().validate(caddo_file)
         self.save_data(caddo_file)
         self.save_runs(caddo_file)
         self.pack_to_caddo_file(caddo_file)
@@ -74,6 +76,7 @@ class CaddoFileParser:
             data = self.read_csv_data(zf, generation_settings)
             runs = self.read_runs(zf, generation_settings)
         caddo_file: CaddoFile = CaddoFile(runs, data, generation_settings)
+        CaddoFileValidator().validate(caddo_file)
         return caddo_file
 
     def read_settings(self, zf):
