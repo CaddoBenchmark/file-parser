@@ -4,7 +4,6 @@ from caddo_file_parser.settings.generation_settings import GenerationSettings
 class GenerationSettingsLoader:
     def load_settings_object(self, settings_file):
         settings_data: GenerationSettings = GenerationSettings()
-        print(settings_file)
         settings_data.data_input_path = settings_file["data"]["input"]["path"]
         settings_data.data_input_separator = settings_file["data"]['input']['separator']
         settings_data.data_extraction_function_path = settings_file["data"]['extraction']['function']['path']

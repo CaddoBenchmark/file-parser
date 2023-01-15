@@ -97,7 +97,7 @@ class CaddoFileParser:
             index_sets = []
             for fold_number in range(total_index_sets_in_run):
                 index_set_file = zf.read(f"index_set_{fold_number}_run_{run_number}.yaml").decode(encoding="utf-8")
-                index_set = yaml.load(index_set_file, Loader=SafeLoader)
+                index_set = IndexSet(yaml.load(index_set_file, Loader=SafeLoader))
                 index_sets.append(index_set)
             runs.append(
                 Run(
