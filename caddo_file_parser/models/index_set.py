@@ -5,8 +5,11 @@ class IndexSet:
         self.test_indexes = test_indexes
         self.seed = seed
 
-    def __init__(self, index_set_yaml_file):
-            self.number = index_set_yaml_file["number"]
-            self.train_indexes = index_set_yaml_file["train_indexes"]
-            self.test_indexes = index_set_yaml_file["test_indexes"]
-            self.seed = index_set_yaml_file["seed"]
+    @staticmethod
+    def of(index_set_yaml_file):
+        number = index_set_yaml_file["number"]
+        train_indexes = index_set_yaml_file["train_indexes"]
+        test_indexes = index_set_yaml_file["test_indexes"]
+        seed = index_set_yaml_file["seed"]
+        index_set = IndexSet(number, train_indexes, test_indexes, seed)
+        return index_set
