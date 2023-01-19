@@ -19,7 +19,7 @@ class SettingsValidator:
                 path = settings.data_splitting_folding_seeds_file_path
                 if len(path) < 5:
                     raise AttributeError(
-                        f"The seed file must be .yaml or .yml")
-                if path[len(path) - 5:] != ".yaml" and path[len(path) - 4:] != ".yml":
+                        f"The seed file must be .yaml")
+                if path[len(path) - 5:] != ".yaml":
                     raise AttributeError(
-                        f"TThe seed file must be .yaml or .yml")
+                        f"TThe seed file must be .yaml")

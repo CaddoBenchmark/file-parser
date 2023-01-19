@@ -45,6 +45,7 @@ class FileSavingTest(unittest.TestCase):
                     data=[[0, 1, 2], [1, 3, 4], [2, 5, 6]],
                     columns=["idx", "x__col_A", "y__col_B"]
                 ),
-                settings=settings
+                settings=settings,
+                seeds=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
             )
             return caddo_file

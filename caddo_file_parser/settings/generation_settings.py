@@ -29,5 +29,5 @@ class GenerationSettings:
 #       runs: 10
 #       seeds:
 #         from_list: [1,2,3,4,5, 6, 7, 8, 9, 10] //only one of them should be filled, the second one live empty
-#         from_path: seeds.yml
+#         from_path: seeds.yaml
 
