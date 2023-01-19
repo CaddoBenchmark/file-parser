@@ -11,6 +11,9 @@ class GenerationSettingsLoader:
         settings_data.data_splitting_runs = settings_file["data"]['splitting']['runs']
         settings_data.data_output_file_name = settings_file["data"]['output']['file']['name']
         settings_data.data_splitting_folding_method = settings_file["data"]['splitting']['folding']['method']
-        settings_data.data_splitting_folding_seeds_from_list = settings_file["data"]['splitting']['folding']['seeds']['from_list']
+        if settings_file["data"]['splitting']['folding']['seeds']['from_list'] is not None:
+            settings_data.data_splitting_folding_seeds_from_list = settings_file["data"]['splitting']['folding']['seeds']['from_list']
+        if settings_file["data"]['splitting']['folding']['seeds']['from_file'] is not None:
+            settings_data.data_splitting_folding_seeds_file_path = settings_file["data"]['splitting']['folding']['seeds']['from_file']
         settings_data.data_output_file_separator = settings_file["data"]['output']['file']['separator']
         return settings_data
