@@ -23,11 +23,13 @@ class CaddoFileValidator:
         print(f"Declared in settings: {runs_number_in_settings}, found in caddo_file {runs_number_in_caddo_file}")
         is_valid = runs_number_in_caddo_file == runs_number_in_settings
         if not is_valid:
-            raise AttributeError(f"There is inconsistent number of Runs, settings declared {runs_number_in_settings} but found {runs_number_in_caddo_file}")
+            raise AttributeError(
+                f"There is inconsistent number of Runs, settings declared {runs_number_in_settings} but found {runs_number_in_caddo_file}")
         print()
 
     def _validate_index_set_counts_in_runs(self, caddo_file: CaddoFile):
-        print("Checking if all Runs have this same number of index_sets and if each index_contains this same number of indexes")
+        print(
+            "Checking if all Runs have this same number of index_sets and if each index_contains this same number of indexes")
         last_number_of_index_sets = len(caddo_file.runs[0].index_sets)
         last_number_of_train_elements_in_index_set = len(caddo_file.runs[0].index_sets[0].train_indexes)
         last_number_of_test_elements_in_index_set = len(caddo_file.runs[0].index_sets[0].test_indexes)
@@ -35,12 +37,15 @@ class CaddoFileValidator:
             print(f"Checking run number {run.number}:")
             print(f"Number of index_sets found: {len(run.index_sets)}")
             if (len(run.index_sets)) != last_number_of_index_sets:
-                raise AttributeError(f"There is inconsistent number of elements in run {run} and in first run was {last_number_of_index_sets}")
+                raise AttributeError(
+                    f"There is inconsistent number of elements in run {run} and in first run was {last_number_of_index_sets}")
             for index_set in run.index_sets:
                 if len(index_set.train_indexes) != last_number_of_train_elements_in_index_set:
-                    raise AttributeError(f"There is inconsistent number of elements in index_set train indexes {index_set.train_indexes} and in first index set {last_number_of_train_elements_in_index_set}")
+                    raise AttributeError(
+                        f"There is inconsistent number of elements in index_set train indexes {index_set.train_indexes} and in first index set {last_number_of_train_elements_in_index_set}")
                 if len(index_set.test_indexes) != last_number_of_test_elements_in_index_set:
-                    raise AttributeError(f"There is inconsistent number of elements in index_set test indexes {index_set.test_indexes} and in first index set {last_number_of_test_elements_in_index_set}")
+                    raise AttributeError(
+                        f"There is inconsistent number of elements in index_set test indexes {index_set.test_indexes} and in first index set {last_number_of_test_elements_in_index_set}")
             print("All index sets in this run has this same number of test indexes")
             print("All index sets in this run has this same number of train indexes")
             print()
@@ -66,7 +71,8 @@ class CaddoFileValidator:
                 seed_in_index_set = index_set.seed
                 print(f"Found seed in index_set is {seed_in_index_set}")
                 if seed_in_run != seed_in_index_set:
-                    raise AttributeError(f"Seed in index_set {seed_in_index_set} is different than seed in Run {seed_in_run}")
+                    raise AttributeError(
+                        f"Seed in index_set {seed_in_index_set} is different than seed in Run {seed_in_run}")
         print()
 
     def _settings_objects_set(self, caddo_file: CaddoFile):
@@ -102,12 +108,14 @@ class CaddoFileValidator:
                     try:
                         data.loc[index]
                     except KeyError:
-                        raise AttributeError(f"In run {run.number} in test index_set {index_set.number} was index {index} that not match data")
+                        raise AttributeError(
+                            f"In run {run.number} in test index_set {index_set.number} was index {index} that not match data")
                 for index in index_set.train_indexes:
                     try:
                         data.loc[index]
                     except KeyError:
-                        raise AttributeError(f"In run {run.number} in train index_set {index_set.number} was index {index} that not match data")
+                        raise AttributeError(
+                            f"In run {run.number} in train index_set {index_set.number} was index {index} that not match data")
         print("All indexes are OK")
         print()
 
@@ -127,7 +135,8 @@ class CaddoFileValidator:
             try:
                 ids_to_match.remove(run.number)
             except ValueError:
-                raise AttributeError(f"Run number {run.number} is out of range. Those should be in range <0,{len(runs)})")
+                raise AttributeError(
+                    f"Run number {run.number} is out of range. Those should be in range <0,{len(runs)})")
         if len(ids_to_match) > 0:
             raise AttributeError(f"There was Run ids that was missing {ids_to_match}")
         print("All runs have valid number")

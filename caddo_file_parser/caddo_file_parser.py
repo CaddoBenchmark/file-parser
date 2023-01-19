@@ -25,6 +25,7 @@ class CaddoFileParser:
         CaddoFileValidator().validate(caddo_file)
         self.save_data(caddo_file)
         self.save_runs(caddo_file)
+        self.save_seeds(caddo_file)
         self.pack_to_caddo_file(caddo_file)
         self.remove_unused_file(caddo_file)
 
@@ -39,6 +40,14 @@ class CaddoFileParser:
         for run in caddo_file.runs:
             self.save_index_sets(run)
 
+    def save_seeds(self, caddo_file):
+        with open("seeds.yaml", 'w') as file:
+            file_content = {
+                "seeds": caddo_file.seeds,
+            }
+            print(file_content)
+            yaml.dump(file_content, file, Dumper=Dumper, default_flow_style=False)
+
     def save_index_sets(self, run):
         for index_set in run.index_sets:
             index_set_number = index_set.number
@@ -51,6 +60,7 @@ class CaddoFileParser:
                 "test_indexes": test_indexes,
                 "seed": seed
             }
+            print(file_content)
             with open(f"index_set_{index_set_number}_run_{run.number}.yaml", 'w') as file:
                 yaml.dump(file_content, file, Dumper=Dumper, default_flow_style=False)
 
@@ -58,7 +68,7 @@ class CaddoFileParser:
         filenames = []
         for run in caddo_file.runs:
             filenames += [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in caddo_file.runs]
-        filenames += ["data.csv"] + ["settings.yaml"]
+        filenames += ["data.csv"] + ["settings.yaml"] + ["seeds.yaml"]
         with zipfile.ZipFile(f"{caddo_file.settings.data_output_file_name}.caddo", "w") as archive:
             for filename in filenames:
                 archive.write(filename)
@@ -75,7 +85,8 @@ class CaddoFileParser:
             generation_settings = self.read_settings(zf)
             data = self.read_csv_data(zf, generation_settings)
             runs = self.read_runs(zf, generation_settings)
-        caddo_file: CaddoFile = CaddoFile(runs, data, generation_settings)
+            seeds = self.read_seeds(zf, generation_settings)
+        caddo_file: CaddoFile = CaddoFile(runs, data, generation_settings, seeds)
         CaddoFileValidator().validate(caddo_file)
         return caddo_file
 
@@ -107,6 +118,13 @@ class CaddoFileParser:
                 )
             )
         return runs
+
+    def read_seeds(self, zf, generation_settings):
+        if generation_settings.data_splitting_folding_seeds_from_list:
+            return generation_settings.data_splitting_folding_seeds_from_list
+        else:
+            seeds_file = zf.read(f"{generation_settings.data_splitting_folding_seeds_file_path}").decode(encoding="utf-8")
+            return yaml.load(seeds_file, Loader=SafeLoader)["seeds"]
 
     def _get_total_index_sets_in_run(self, generation_settings):
         if generation_settings.data_splitting_folding_method is not None:
