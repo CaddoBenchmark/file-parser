@@ -25,6 +25,7 @@ class CaddoFileParser:
         CaddoFileValidator().validate(caddo_file)
         self.save_data(caddo_file)
         self.save_runs(caddo_file)
+        self.save_seeds(caddo_file)
         self.pack_to_caddo_file(caddo_file)
         self.remove_unused_file(caddo_file)
 
@@ -38,6 +39,13 @@ class CaddoFileParser:
     def save_runs(self, caddo_file):
         for run in caddo_file.runs:
             self.save_index_sets(run)
+
+    def save_seeds(self, caddo_file):
+        with open(f"seeds.yaml", 'w') as file:
+            file_content = {
+                "seeds": caddo_file.seeds,
+            }
+            yaml.dump(file_content, file, Dumper=Dumper, default_flow_style=False)
 
     def save_index_sets(self, run):
         for index_set in run.index_sets:

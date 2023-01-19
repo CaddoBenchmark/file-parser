@@ -1,4 +1,5 @@
 from caddo_file_parser.settings.generation_settings import GenerationSettings
+from caddo_file_parser.validation.settings_validator import SettingsValidator
 
 
 class GenerationSettingsLoader:
@@ -16,4 +17,5 @@ class GenerationSettingsLoader:
         if settings_file["data"]['splitting']['folding']['seeds']['from_file'] is not None:
             settings_data.data_splitting_folding_seeds_file_path = settings_file["data"]['splitting']['folding']['seeds']['from_file']
         settings_data.data_output_file_separator = settings_file["data"]['output']['file']['separator']
+        SettingsValidator().validate(settings_data)
         return settings_data
