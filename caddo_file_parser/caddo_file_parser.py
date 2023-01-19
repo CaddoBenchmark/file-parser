@@ -85,7 +85,7 @@ class CaddoFileParser:
             generation_settings = self.read_settings(zf)
             data = self.read_csv_data(zf, generation_settings)
             runs = self.read_runs(zf, generation_settings)
-            seeds = self.read_seeds(zf, generation_settings)
+            seeds = self.read_seeds_from_zip(zf, generation_settings)
         caddo_file: CaddoFile = CaddoFile(runs, data, generation_settings, seeds)
         CaddoFileValidator().validate(caddo_file)
         return caddo_file
@@ -119,12 +119,19 @@ class CaddoFileParser:
             )
         return runs
 
-    def read_seeds(self, zf, generation_settings):
+    def read_seeds_from_zip(self, zf, generation_settings):
         if generation_settings.data_splitting_folding_seeds_from_list:
             return generation_settings.data_splitting_folding_seeds_from_list
         else:
             seeds_file = zf.read(f"{generation_settings.data_splitting_folding_seeds_file_path}").decode(encoding="utf-8")
             return yaml.load(seeds_file, Loader=SafeLoader)["seeds"]
+
+    def read_seeds(self, generation_settings):
+        if generation_settings.data_splitting_folding_seeds_file_path != '':
+            with open(generation_settings.data_splitting_folding_seeds_file_path) as f:
+                return yaml.load(f, Loader=SafeLoader)["seeds"]
+        else:
+            return generation_settings.data_splitting_folding_seeds_from_list
 
     def _get_total_index_sets_in_run(self, generation_settings):
         if generation_settings.data_splitting_folding_method is not None:

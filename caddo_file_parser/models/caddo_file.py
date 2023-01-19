@@ -1,4 +1,3 @@
-from caddo_file_parser.models.index_set import IndexSet
 import pandas as pd
 
 from caddo_file_parser.models.run import Run
