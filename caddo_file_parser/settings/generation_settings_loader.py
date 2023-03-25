@@ -5,7 +5,8 @@ from caddo_file_parser.validation.settings_validator import SettingsValidator
 class GenerationSettingsLoader:
     def load_settings_object(self, settings_file):
         settings_data: GenerationSettings = GenerationSettings()
-        settings_data.data_settings_file_path = settings_file["data"]["settings_file"]["path"]
+        if settings_file["data"]["settings_file"]["path"] is not None:
+            settings_data.data_settings_file_path = settings_file["data"]["settings_file"]["path"]
         settings_data.data_input_path = settings_file["data"]["input"]["path"]
         settings_data.data_input_separator = settings_file["data"]["input"]["separator"]
         settings_data.data_extraction_function_path = settings_file["data"]['extraction']['function']['path']
