@@ -68,7 +68,7 @@ class CaddoFileParser:
         filenames = []
         for run in caddo_file.runs:
             filenames += [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in caddo_file.runs]
-        filenames += ["data.csv"] + ["settings.yaml"] + ["seeds.yaml"]
+        filenames += ["data.csv"] + [caddo_file.settings.data_settings_file_path] + ["seeds.yaml"]
         with zipfile.ZipFile(f"{caddo_file.settings.data_output_file_name}.caddo", "w") as archive:
             for filename in filenames:
                 archive.write(filename)
