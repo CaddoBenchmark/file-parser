@@ -1,4 +1,6 @@
 data:
+  settings_file:
+    path: settings.yaml
   input:
     path: data.csv
     separator: ','

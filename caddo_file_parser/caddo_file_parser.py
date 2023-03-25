@@ -79,6 +79,9 @@ class CaddoFileParser:
             for file in filenames:
                 os.remove(file)
         os.remove("data.csv")
+        if caddo_file.settings.data_splitting_folding_seeds_file_path != "seeds.yaml" \
+                and caddo_file.settings.data_settings_file_path != "./seeds.yaml":
+            os.remove("seeds.yaml")
 
     def read_data(self, file_name) -> CaddoFile:
         with zipfile.ZipFile(file_name + ".caddo", "r") as zf:
