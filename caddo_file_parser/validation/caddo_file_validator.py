@@ -42,10 +42,10 @@ class CaddoFileValidator:
             for index_set in run.index_sets:
                 if len(index_set.train_indexes) != last_number_of_train_elements_in_index_set:
                     raise AttributeError(
-                        f"There is inconsistent number of elements in index_set train indexes {index_set.train_indexes} and in first index set {last_number_of_train_elements_in_index_set}")
+                        f"There is inconsistent number of elements in index_set train indexes {len(index_set.train_indexes)} and in first index set {last_number_of_train_elements_in_index_set}")
                 if len(index_set.test_indexes) != last_number_of_test_elements_in_index_set:
                     raise AttributeError(
-                        f"There is inconsistent number of elements in index_set test indexes {index_set.test_indexes} and in first index set {last_number_of_test_elements_in_index_set}")
+                        f"There is inconsistent number of elements in index_set test indexes {len(index_set.test_indexes)} and in first index set {last_number_of_test_elements_in_index_set}")
             print("All index sets in this run has this same number of test indexes")
             print("All index sets in this run has this same number of train indexes")
             print()
