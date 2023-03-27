@@ -1,3 +1,5 @@
+import math
+
 from caddo_file_parser.models.caddo_file import CaddoFile
 
 
@@ -41,11 +43,17 @@ class CaddoFileValidator:
                     f"There is inconsistent number of elements in run {run} and in first run was {last_number_of_index_sets}")
             for index_set in run.index_sets:
                 if len(index_set.train_indexes) != last_number_of_train_elements_in_index_set:
-                    raise AttributeError(
-                        f"There is inconsistent number of elements in index_set train indexes {len(index_set.train_indexes)} and in first index set {last_number_of_train_elements_in_index_set}")
+                    if math.fabs(last_number_of_train_elements_in_index_set - index_set.train_indexes) == 1:
+                        print("index_sets may differ in the number of elements by 1")
+                    else:
+                        raise AttributeError(
+                            f"There is inconsistent number of elements in index_set train indexes {len(index_set.train_indexes)} and in first index set {last_number_of_train_elements_in_index_set}")
                 if len(index_set.test_indexes) != last_number_of_test_elements_in_index_set:
-                    raise AttributeError(
-                        f"There is inconsistent number of elements in index_set test indexes {len(index_set.test_indexes)} and in first index set {last_number_of_test_elements_in_index_set}")
+                    if math.fabs(last_number_of_test_elements_in_index_set - index_set.test_indexes) == 1:
+                        print("index_sets may differ in the number of elements by 1")
+                    else:
+                        raise AttributeError(
+                            f"There is inconsistent number of elements in index_set test indexes {len(index_set.test_indexes)} and in first index set {last_number_of_test_elements_in_index_set}")
             print("All index sets in this run has this same number of test indexes")
             print("All index sets in this run has this same number of train indexes")
             print()
