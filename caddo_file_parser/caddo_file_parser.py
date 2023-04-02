@@ -1,6 +1,7 @@
 import os
 import zipfile
 import io
+import shutil
 
 from yaml import SafeLoader
 
@@ -66,7 +67,8 @@ class CaddoFileParser:
         filenames = []
         for run in caddo_file.runs:
             filenames += [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in run.index_sets]
-        filenames += ["data.csv"] + [caddo_file.settings.data_settings_file_path] + ["seeds.yaml"]
+        shutil.copy2(caddo_file.settings.data_settings_file_path, 'settings.yaml')
+        filenames += ["data.csv"] + ['settings.yaml'] + ["seeds.yaml"]
         with zipfile.ZipFile(f"{caddo_file.settings.data_output_file_name}.caddo", "w") as archive:
             for filename in filenames:
                 archive.write(filename)
@@ -77,6 +79,7 @@ class CaddoFileParser:
             for file in filenames:
                 os.remove(file)
         os.remove("data.csv")
+        os.remove('settings.yaml')
         if caddo_file.settings.data_splitting_folding_seeds_file_path != "seeds.yaml" \
                 and caddo_file.settings.data_settings_file_path != "./seeds.yaml":
             os.remove("seeds.yaml")
@@ -124,7 +127,9 @@ class CaddoFileParser:
         if generation_settings.data_splitting_folding_seeds_from_list:
             return generation_settings.data_splitting_folding_seeds_from_list
         else:
-            seeds_file = zf.read(f"{generation_settings.data_splitting_folding_seeds_file_path}").decode(encoding="utf-8")
+            normalized_data_splitting_folding_seeds_file_path = \
+                os.path.basename(generation_settings.data_splitting_folding_seeds_file_path)
+            seeds_file = zf.read(f"{normalized_data_splitting_folding_seeds_file_path}").decode(encoding="utf-8")
             return yaml.load(seeds_file, Loader=SafeLoader)["seeds"]
 
     def read_seeds(self, generation_settings):
