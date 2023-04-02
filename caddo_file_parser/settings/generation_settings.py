@@ -1,4 +1,5 @@
 class GenerationSettings:
+    data_settings_file_path = ''
     data_input_path = ''
     data_input_separator = ''
     data_extraction_function_path = ''
