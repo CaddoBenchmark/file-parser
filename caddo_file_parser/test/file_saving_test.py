@@ -20,7 +20,7 @@ class FileSavingTest(unittest.TestCase):
 
     def _create_caddo_file(self):
         settings_loader = GenerationSettingsLoader()
-        with open("settings.yaml", 'r') as file:
+        with open("settings-data.yaml", 'r') as file:
             settings = settings_loader.load_settings_object(yaml.load(file, Loader=SafeLoader))
             caddo_file = CaddoFile(
                 runs=[
