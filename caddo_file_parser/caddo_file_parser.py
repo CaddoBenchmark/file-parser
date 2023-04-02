@@ -45,7 +45,6 @@ class CaddoFileParser:
             file_content = {
                 "seeds": caddo_file.seeds,
             }
-            print(file_content)
             yaml.dump(file_content, file, Dumper=Dumper, default_flow_style=False)
 
     def save_index_sets(self, run):
@@ -60,14 +59,13 @@ class CaddoFileParser:
                 "test_indexes": test_indexes,
                 "seed": seed
             }
-            print(file_content)
             with open(f"index_set_{index_set_number}_run_{run.number}.yaml", 'w') as file:
                 yaml.dump(file_content, file, Dumper=Dumper, default_flow_style=False)
 
     def pack_to_caddo_file(self, caddo_file):
         filenames = []
         for run in caddo_file.runs:
-            filenames += [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in caddo_file.settings.data_splitting_folding_number]
+            filenames += [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in run.index_sets]
         filenames += ["data.csv"] + [caddo_file.settings.data_settings_file_path] + ["seeds.yaml"]
         with zipfile.ZipFile(f"{caddo_file.settings.data_output_file_name}.caddo", "w") as archive:
             for filename in filenames:
@@ -75,7 +73,7 @@ class CaddoFileParser:
 
     def remove_unused_file(self, caddo_file):
         for run in caddo_file.runs:
-            filenames = [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in caddo_file.settings.data_splitting_folding_number]
+            filenames = [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in run.index_sets]
             for file in filenames:
                 os.remove(file)
         os.remove("data.csv")
