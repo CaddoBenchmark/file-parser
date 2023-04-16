@@ -67,7 +67,7 @@ class CaddoFileParser:
         try:
             shutil.copy2(from_path, new_file_name)
         except:
-            print(f"{new_file_name} already exists in current directory""")
+            print(f"{new_file_name} already exists in current directory")
 
     def pack_to_caddo_file(self, caddo_file):
         filenames = []
@@ -82,16 +82,18 @@ class CaddoFileParser:
             for filename in filenames:
                 archive.write(filename)
 
+    def remove_if_file_was_copied_to_working_dir(self, settings_file_path, file_name):
+        if settings_file_path != file_name and settings_file_path != f"./{file_name}":
+            os.remove(file_name)
+
     def remove_unused_file(self, caddo_file):
         for run in caddo_file.runs:
             filenames = [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in run.index_sets]
             for file in filenames:
                 os.remove(file)
-        os.remove("data.csv")
-        os.remove('settings.yaml')
-        if caddo_file.settings.data_splitting_folding_seeds_file_path != "seeds.yaml" \
-                and caddo_file.settings.data_settings_file_path != "./seeds.yaml":
-            os.remove("seeds.yaml")
+        self.remove_if_file_was_copied_to_working_dir(caddo_file.settings.data_splitting_folding_seeds_file_path, "seeds.yaml")
+        self.remove_if_file_was_copied_to_working_dir(caddo_file.settings.data_settings_file_path, "settings.yaml")
+        self.remove_if_file_was_copied_to_working_dir(caddo_file.settings.data_input_path, "data.csv")
 
     def read_data(self, file_name) -> CaddoFile:
         with zipfile.ZipFile(file_name + ".caddo", "r") as zf:
