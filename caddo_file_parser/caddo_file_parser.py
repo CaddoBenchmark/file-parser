@@ -63,11 +63,20 @@ class CaddoFileParser:
             with open(f"index_set_{index_set_number}_run_{run.number}.yaml", 'w') as file:
                 yaml.dump(file_content, file, Dumper=Dumper, default_flow_style=False)
 
+    def copy_file(self, from_path, new_file_name):
+        try:
+            shutil.copy2(from_path, new_file_name)
+        except:
+            print(f"{new_file_name} already exists in current directory""")
+
     def pack_to_caddo_file(self, caddo_file):
         filenames = []
         for run in caddo_file.runs:
             filenames += [f"index_set_{index_set.number}_run_{run.number}.yaml" for index_set in run.index_sets]
-        shutil.copy2(caddo_file.settings.data_settings_file_path, 'settings.yaml')
+        self.copy_file(caddo_file.settings.data_settings_file_path, "settings.yaml")
+        self.copy_file(caddo_file.settings.data_splitting_folding_seeds_file_path, "seeds.yaml")
+        self.copy_file(caddo_file.settings.data_input_path, "data.csv")
+
         filenames += ["data.csv"] + ['settings.yaml'] + ["seeds.yaml"]
         with zipfile.ZipFile(f"{caddo_file.settings.data_output_file_name}.caddo", "w") as archive:
             for filename in filenames:
