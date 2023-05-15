@@ -93,7 +93,6 @@ class CaddoFileParser:
                 os.remove(file)
         self.remove_if_file_was_copied_to_working_dir(caddo_file.settings.data_splitting_folding_seeds_file_path, "seeds.yaml")
         self.remove_if_file_was_copied_to_working_dir(caddo_file.settings.data_settings_file_path, "settings.yaml")
-        self.remove_if_file_was_copied_to_working_dir(caddo_file.settings.data_input_path, "data.csv")
 
     def read_data(self, file_name) -> CaddoFile:
         with zipfile.ZipFile(file_name + ".caddo", "r") as zf:
