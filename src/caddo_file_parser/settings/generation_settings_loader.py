@@ -16,10 +16,13 @@ class GenerationSettingsLoader:
         settings_data.data_splitting_runs = settings_file["data"]['splitting']['runs']
         settings_data.data_output_file_name = settings_file["data"]['output']['file']['name']
         settings_data.data_splitting_folding_method = settings_file["data"]['splitting']['folding']['method']
-        if settings_file["data"]['splitting']['folding']['seeds']['from_list'] is not None:
-            settings_data.data_splitting_folding_seeds_from_list = settings_file["data"]['splitting']['folding']['seeds']['from_list']
-        if settings_file["data"]['splitting']['folding']['seeds']['from_file'] is not None:
-            settings_data.data_splitting_folding_seeds_file_path = settings_file["data"]['splitting']['folding']['seeds']['from_file']
+        if settings_file["data"]['splitting']['folding']['seeds']['auto_generate'] is False:
+            if settings_file["data"]['splitting']['folding']['seeds']['from_list'] is not None:
+                settings_data.data_splitting_folding_seeds_from_list = settings_file["data"]['splitting']['folding']['seeds']['from_list']
+            if settings_file["data"]['splitting']['folding']['seeds']['from_file'] is not None:
+                settings_data.data_splitting_folding_seeds_file_path = settings_file["data"]['splitting']['folding']['seeds']['from_file']
+        else:
+            settings_data.data_splitting_folding_seeds_from_list = [x + 1 for x in range(settings_data.data_splitting_runs * settings_data.data_splitting_folding_number)]
         settings_data.data_output_file_separator = settings_file["data"]['output']['file']['separator']
         SettingsValidator().validate(settings_data)
         return settings_data

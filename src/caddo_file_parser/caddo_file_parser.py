@@ -112,7 +112,7 @@ class CaddoFileParser:
     def read_csv_data(self, zf, generation_settings):
         separator = generation_settings.data_output_file_separator
         data_csv = zf.read("data.csv").decode(encoding="utf-8")
-        return pd.read_csv(io.StringIO(data_csv), sep=separator)
+        return pd.read_csv(io.StringIO(data_csv), sep=separator,  engine='python', on_bad_lines='skip')
 
     def read_runs(self, zf, generation_settings):
         runs = []
