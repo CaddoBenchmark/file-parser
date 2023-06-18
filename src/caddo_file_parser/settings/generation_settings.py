@@ -7,6 +7,7 @@ class GenerationSettings:
     data_splitting_runs = 0
     data_output_file_name = ''
     data_splitting_folding_method = ''
+    data_splitting_folding_seeds_auto_generate = False
     data_splitting_folding_seeds_from_list = []
     data_splitting_folding_seeds_file_path = ''
     data_output_file_separator = ''
